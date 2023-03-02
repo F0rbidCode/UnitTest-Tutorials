@@ -51,6 +51,18 @@ namespace MathClasses
         {
             return new Vector3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
         }
+
+        //create a function to calculate magnitude of a Vector3
+        public float Magnitude()
+        {
+            return (float)Math.Sqrt(x * x + y * y + z * z);
+        }
+
+        //create a function to calculate the squared magnitude of a Vector3
+        public float MagnitudeSqr()
+        {
+            return (x * x + y * y + z * z);
+        }
     }
 
 }
