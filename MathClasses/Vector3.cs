@@ -7,21 +7,50 @@ using System.Threading.Tasks;
 
 namespace MathClasses
 {
+    //declair Vector3 as a struct
     public struct Vector3
     {
         public float x;
         public float y;
         public float z;
 
-        public Vector3(float _x, float _y, float _z) : this()
+        //create a constructor that takes x y and z positions and sets them to the corrasponding positions in the struct
+        public Vector3(float _x, float _y, float _z)
         {
-            float x = _x;
-            float y = _y;
-            float z = _z;
+            x = _x;
+            y = _y;
+            z = _z;
         }
 
-    };      
+        //create a function to add 2 vector3s together
+        public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
+        {
+            return new Vector3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+        }
 
+        //create a function to subtract a vector 3 from annother
+        public static Vector3 operator -(Vector3 lhs, Vector3 rhs)
+        {
+            return new Vector3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+        }
 
-    
+        //create a fucntion to multiply a vector3 by a scaler
+        public static Vector3 operator *(Vector3 lhs, float rhs)
+        {
+            return new Vector3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs);
+        }
+
+        //create a fucntion to multiply a vector3 by a scaler
+        public static Vector3 operator *(float lhs, Vector3 rhs)
+        {
+            return new Vector3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z);
+        }
+
+        //create a function to divide a vector3 by a scaler
+        public static Vector3 operator /(Vector3 lhs, float rhs)
+        {
+            return new Vector3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
+        }
+    }
+
 }

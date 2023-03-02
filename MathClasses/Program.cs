@@ -9,13 +9,38 @@ namespace MathClasses
     class Program
     {
         static void Main(string[] args)
-        {
-            // The code provided will print ‘Hello World’ to the console.
-            // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
-            Console.WriteLine("Hello World!");
+        {           
+
+            Vector3 V1 = new Vector3(0, 4, 1);
+            Vector3 V2 = new Vector3(1, 2, 1);
+            Vector3 V3 = new Vector3();
+            float F = 1.1f;
+
+            V3 = (V1 + V2);
+            Console.Write(V3.x + " ");
+            Console.Write(V3.y + " ");
+            Console.WriteLine(V3.z);
+
+            V3 = (V1 - V2);
+            Console.Write(V3.x + " ");
+            Console.Write(V3.y + " ");
+            Console.WriteLine(V3.z);
+            V3 = (V1 * F);
+            Console.Write(V3.x + " ");
+            Console.Write(V3.y + " ");
+            Console.WriteLine(V3.z);
+            V3 = (F * V1);
+            Console.Write(V3.x + " ");
+            Console.Write(V3.y + " ");
+            Console.WriteLine(V3.z);
+            V3 = (V1 / F);
+            Console.Write(V3.x + " ");
+            Console.Write(V3.y + " ");
+            Console.WriteLine(V3.z);
+
+
             Console.ReadKey();
 
-            // Go to http://aka.ms/dotnet-get-started-console to continue learning how to build a console app! 
         }
     }
 }
