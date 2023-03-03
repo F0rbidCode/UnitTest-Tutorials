@@ -80,10 +80,50 @@ namespace MathClasses
             this.z /= m;
         }
 
-        //create a function that returns a normalised Vector
+        //create a function that returns a normalised Vector3
         public Vector3 GetNormalised()
         {
             return (this / Magnitude());
+        }
+
+        //create a function to return the dot ptoduct of the Vector3
+        public float Dot(Vector3 rhs)
+        {
+            return x * rhs.x + y * rhs.y + z * rhs.z;
+        }
+
+        //create a function to return a perpendiculat funtion (RH method)
+        public Vector3 GetPerpendicularRH()
+        {
+            return new Vector3(-y, x, 0);
+        }
+        //create a function to return a perpendiculat funtion (LH method)
+        public Vector3 GetPerpendicularLH()
+        {
+            return new Vector3(y, -x, 0);
+        }
+
+        //create a function to return a purpendicular vector using cross product
+        public Vector3 Cross(Vector3 rhs)
+        {
+            return new Vector3(
+                y * rhs.z - z * rhs.y,
+                z * rhs.x - x * rhs.z,
+                x * rhs.y - y * rhs.x);
+        }
+
+        //creare a function to return the angle between two vectors
+        public float AngleBetween(Vector3 other)
+        {
+            //first normalise the vectors
+            Vector3 a = GetNormalised();
+            Vector3 b = other.GetNormalised();
+
+            //calculate the dot product
+            float d = a.x * b.x + a.y * b.y + a.z * b.z;
+
+            //return the agle between them
+            return (float)Math.Acos(d);
         }
     }
 
