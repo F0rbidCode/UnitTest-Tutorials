@@ -52,5 +52,6 @@ namespace MathClasses
         {
             return new Vector4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs);
         }
+        
     }
 }

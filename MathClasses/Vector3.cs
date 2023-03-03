@@ -63,6 +63,28 @@ namespace MathClasses
         {
             return (x * x + y * y + z * z);
         }
+
+        //create a function to calculate distance between points
+        public float Distance(Vector3 other)
+        {
+            Vector3 diff = this - other;
+            return (float)Math.Sqrt(diff.x * diff.x + diff.y + diff.y + diff.z * diff.z);
+        }
+
+        //create a function to normalise the Vector3
+        public void Normalize()
+        {
+            float m = Magnitude();
+            this.x /= m;
+            this.y /= m;
+            this.z /= m;
+        }
+
+        //create a function that returns a normalised Vector
+        public Vector3 GetNormalised()
+        {
+            return (this / Magnitude());
+        }
     }
 
 }
