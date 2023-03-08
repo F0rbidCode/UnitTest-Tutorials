@@ -52,6 +52,13 @@ namespace MathClasses
             m01 = m02 = m10 = m12 = m20 = m21 = 0;
         }
 
+        //create a function to construct a Matrix2 Identity Matrix
+        public Matrix3 IdentityMatrix3()
+        {
+            Matrix3 IdentityM3 = new Matrix3(1, 0, 0, 0, 1 , 0, 0, 0, 1);
+            return IdentityM3;
+        }
+
         //create a function to multiply a Matrix3 by another Matrix3
         public static Matrix3 operator *(Matrix3 M1, Matrix3 M2)
         {
