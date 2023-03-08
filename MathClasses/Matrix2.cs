@@ -42,5 +42,18 @@ namespace MathClasses
                 M1.m00 * M2.m00 + M1.m01 * M2.m10, M1.m00 * M2.m01 + M1.m01,
                 M1.m10 * M2.m00 + M1.m11 * M2.m10, M1.m10 * M2.m01 + M1.m11);
         }
+
+        //create a function to transpose a Matrix2
+        public Matrix2 Transpose(Matrix2 M)
+        {
+            //flip the Matrix on its diagonal
+            Matrix2 NewM = new Matrix2();
+            NewM.m00 = M.m00;
+            NewM.m01 = M.m10;
+            NewM.m10 = M.m01;
+            NewM.m11 = M.m11;
+
+            return NewM;
+        }
     }
 }

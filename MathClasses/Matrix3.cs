@@ -67,6 +67,18 @@ namespace MathClasses
                 M1.m10 * M2.m00 + M1.m11 * M2.m10 + M1.m12 * M2.m20, M1.m10 * M2.m01 + M1.m11 * M2.m11 + M1.m12 * M2.m21, M1.m10 * M2.m02 + M1.m11 * M2.m12 + M1.m12 * M2.m22,
                 M1.m20 * M2.m00 + M1.m21 * M2.m10 + M1.m22 * M2.m20, M1.m20 * M2.m01 + M1.m21 * M2.m11 + M1.m22 * M2.m21, M1.m20 * M2.m02 + M1.m21 * M2.m12 + M1.m22 * M2.m22);
         }
+
+        //create a function to transpose a Matrix3
+        public Matrix3 Transpose(Matrix3 m)
+        {
+            //flip the Matrix on its diagonal
+            Matrix3 newM = new Matrix3();
+            newM.m00 = m.m00; newM.m01 = m.m10; newM.m02 = m.m20;
+            newM.m10 = m.m01; newM.m11 = m.m11; newM.m12 = m.m21;
+            newM.m20 = m.m02; newM.m21 = m.m12; newM.m22 = m.m22;
+
+            return newM;
+        }
     }
         
 }

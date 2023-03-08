@@ -55,8 +55,10 @@ namespace MathClasses
             Console.WriteLine(V5.y);
             Console.WriteLine(V5.z);
 
-
-
+            M3 = M3.Transpose(M3);
+            Console.WriteLine(M3.m00 + " " + M3.m01 + " " + M3.m02);
+            Console.WriteLine(M3.m10 + " " + M3.m11 + " " + M3.m12);
+            Console.WriteLine(M3.m20 + " " + M3.m21 + " " + M3.m22);
 
             Console.ReadKey();
 
