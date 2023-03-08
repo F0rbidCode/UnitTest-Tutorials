@@ -43,6 +43,14 @@ namespace MathClasses
             m00 = m11 = m22 = uniformScale;
             m01 = m02 = m10 = m12 = m20 = m21 = 0;
         }
+
+        public static Matrix3 operator *(Matrix3 M1, Matrix3 M2)
+        {
+            return new Matrix3(
+                M1.m00 * M2.m00 + M1.m01 * M2.m10 + M1.m02 * M2.m20, M1.m00 * M2.m01 + M1.m01 * M2.m11 + M1.m02 * M2.m21, M1.m00 * M2.m02 + M1.m01 * M2.m12 + M1.m02 * M2.m22,
+                M1.m10 * M2.m00 + M1.m11 * M2.m10 + M1.m12 * M2.m20, M1.m10 * M2.m01 + M1.m11 * M2.m11 + M1.m12 * M2.m21, M1.m10 * M2.m02 + M1.m11 * M2.m12 + M1.m12 * M2.m22,
+                M1.m20 * M2.m00 + M1.m21 * M2.m10 + M1.m22 * M2.m20, M1.m20 * M2.m01 + M1.m21 * M2.m11 + M1.m22 * M2.m21, M1.m20 * M2.m02 + M1.m21 * M2.m12 + M1.m22 * M2.m22);
+        }
     }
         
 }
