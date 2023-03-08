@@ -37,6 +37,14 @@ namespace MathClasses
             m20 = Z.x; m21 = Z.y; m22 = Z.z;
         }
 
+        //create a copying constructor
+        public Matrix3(Matrix3 m)
+        {
+            m00 = m.m00; m01 = m.m01; m02 = m.m02;
+            m10 = m.m10; m11 = m.m11; m12 = m.m12;
+            m20 = m.m20; m21 = m.m21; m22 = m.m22;
+        }
+
         //create a constructor to create a uniform scaling matrix
         public Matrix3(float uniformScale)
         {
@@ -44,6 +52,7 @@ namespace MathClasses
             m01 = m02 = m10 = m12 = m20 = m21 = 0;
         }
 
+        //create a function to multiply a Matrix3 by another Matrix3
         public static Matrix3 operator *(Matrix3 M1, Matrix3 M2)
         {
             return new Matrix3(
