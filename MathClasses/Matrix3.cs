@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MathClasses
 {
-   //declair Matrix3 as a struct
+    //declair Matrix3 as a struct
     public struct Matrix3
     {
         public float m00, m01, m02;
@@ -55,7 +55,7 @@ namespace MathClasses
         //create a function to construct a Matrix2 Identity Matrix
         public Matrix3 IdentityMatrix3()
         {
-            Matrix3 IdentityM3 = new Matrix3(1, 0, 0, 0, 1 , 0, 0, 0, 1);
+            Matrix3 IdentityM3 = new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
             return IdentityM3;
         }
 
@@ -79,6 +79,31 @@ namespace MathClasses
 
             return newM;
         }
+
+        //create a function to create a scaled Matrix3 based on 3 passed in floats
+        public void SetScaled(float x, float y, float z)
+        {
+            m00 = x; m01 = 0; m02 = 0;
+            m10 = 0; m11 = y; m12 = 0;
+            m20 = 0; m21 = 0; m22 = z;
+        }
+
+        //create a function to create a scaled Matrix3 based on a passed in Vector3
+        public void SerScaled(Vector3 v)
+        {
+            m00 = v.x; m01 = 0; m02 = 0;
+            m10 = 0; m11 = v.y; m12 = 0;
+            m20 = 0; m21 = 0; m22 = v.z;
+        }
+
+        //create a function to create a rotation matrix3 to rotate around the X axis
+        public void SetRotateX (double radians)
+        {
+            m00 = 1; m01 = 0; m02 = 0;
+            m10 = 0; m11 = (float)Math.Cos(radians); m12 = (float)Math.Sin(radians);
+            m20 = 0; m21 = (float)-Math.Sin(radians); m22 = (float)Math.Cos(radians);
+        }
+
     }
         
 }
