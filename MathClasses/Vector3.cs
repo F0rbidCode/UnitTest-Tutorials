@@ -40,7 +40,7 @@ namespace MathClasses
             return new Vector3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs);
         }
 
-        //create a fucntion to multiply a vector3 by a scaler
+        //create a fucntion to multiply a scaler by a vector3
         public static Vector3 operator *(float lhs, Vector3 rhs)
         {
             return new Vector3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z);

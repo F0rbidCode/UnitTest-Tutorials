@@ -52,7 +52,7 @@ namespace MathClasses
             m01 = m02 = m10 = m12 = m20 = m21 = 0;
         }
 
-        //create a function to construct a Matrix2 Identity Matrix
+        //create a function to construct a Matrix3 Identity Matrix
         public Matrix3 IdentityMatrix3()
         {
             Matrix3 IdentityM3 = new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
@@ -103,7 +103,54 @@ namespace MathClasses
             m10 = 0; m11 = (float)Math.Cos(radians); m12 = (float)Math.Sin(radians);
             m20 = 0; m21 = (float)-Math.Sin(radians); m22 = (float)Math.Cos(radians);
         }
+        
+        //create a function to create a rotation matrix3 to rotate around the Y axis
+        public void SetRotateY (double radians)
+        {
+            m00 = (float)Math.Cos(radians); m01 = 0; m02 = (float)-Math.Sin(radians);
+            m10 = 0; m11 = 1; m12 = 0;
+            m20 = (float)Math.Sin(radians); m21 = 0; m22 = (float)Math.Cos(radians);
+        }
 
+
+        //create a function to create a rotation matrix3 to rotate around the Z axis
+        public void SetRotateZ(double radians)
+        {
+            m00 = (float)Math.Cos(radians); m01 = (float)Math.Sin(radians); m02 = 0;
+            m10 = (float)-Math.Sin(radians); m11 = (float)Math.Cos(radians); m12 = 0;
+            m20 = 0; m21 = 0; m22 = 1;
+        }
+
+        //create a funtion to set a Euler roation
+        public Matrix3 SetEuler (float pitch, float yaw, float roll)
+        {
+            //create new Matrix3s to hold the x y and z rotations and the final Euler rotation 
+            Matrix3 x = new Matrix3();
+            Matrix3 y = new Matrix3();
+            Matrix3 z = new Matrix3();
+            Matrix3 Eu = new Matrix3();
+
+            //set x y and z Matrix3 to appropriate rotation Matrix3
+            x.SetRotateX(pitch);
+            y.SetRotateY(yaw);
+            z.SetRotateZ(roll);
+
+            //multiply the 3 Matrix3s together starting with z then y then x to get our final Euler Matrix3
+            Eu = (z * y * x);
+            return Eu;
+        }
+
+        //create a function to set stranslation information in Matrix3
+        public void SetTranslation(float x, float y)
+        {
+            m20 = x; m21 = y; m22 = 1;
+        }
+
+        //create a function to translate a Matrix3
+        void Translate(float x, float y)
+        {
+            m20 += x; m21 += y;
+        }
     }
         
 }
