@@ -108,14 +108,27 @@ namespace MathClasses
             m30 += x; m31 += y; m32 += z;
         }
 
-        //create a function to multiply a Matrix4 by another Matrix4
-        public static Matrix4 operator *(Matrix4 M1, Matrix4 M2)
+
+        //Matrix4 multiplication attempt 2
+        public static Matrix4 operator *(Matrix4 M1 , Matrix4 M2)
         {
             return new Matrix4(
-                M1.m00 * M2.m00 + M1.m01 * M2.m10 + M1.m02 * M2.m20 + M1.m03 * M2.m30, M1.m00 * M2.m01 + M1.m01 * M2.m11 + M1.m02 * M2.m21 + M1.m03 * M2.m31, M1.m00 * M2.m02 + M1.m01 * M2.m12 + M1.m02 * M2.m22 + M1.m03 * M2.m32, M1.m00 * M2.m03 + M1.m01 * M2.m13 + M1.m02 * M2.m23 + M1.m03 * M2.m33,
-                M1.m10 * M2.m00 + M1.m11 * M2.m10 + M1.m12 * M2.m20 + M1.m13 * M2.m30, M1.m10 * M2.m01 + M1.m11 * M2.m11 + M1.m12 * M2.m21 + M1.m13 * M2.m31, M1.m10 * M2.m02 + M1.m11 * M2.m12 + M1.m12 * M2.m22 + M1.m13 * M2.m32, M1.m10 * M2.m03 + M1.m11 * M2.m13 + M1.m12 * M2.m23 + M1.m13 * M2.m33,
-                M1.m20 * M2.m00 + M1.m21 * M2.m10 + M1.m22 * M2.m20 + M1.m23 * M2.m30, M1.m20 * M2.m01 + M1.m21 * M2.m11 + M1.m22 * M2.m21 + M1.m23 * M2.m31, M1.m20 * M2.m02 + M1.m21 * M2.m12 + M1.m22 * M2.m22 + M1.m23 + M2.m32, M1.m20 * M2.m03 + M1.m21 * M2.m13 + M1.m22 * M2.m23 + M1.m23 * M2.m33,
-                M1.m30 * M2.m00 + M1.m31 * M2.m10 + M1.m32 * M2.m20 + M1.m33 * M2.m30, M1.m30 * M2.m01 + M1.m31 * M2.m11 + M1.m32 * M2.m21 + M1.m33 * M2.m31, M1.m30 * M2.m02 + M1.m31 * M2.m12 + M1.m32 * M2.m22 + M1.m33 + M2.m32, M1.m30 * M2.m03 + M1.m31 * M2.m13 + M1.m32 * M2.m23 + M1.m33 * M2.m33);
+                M1.m00 * M2.m00 + M1.m10 * M2.m01 + M1.m20 * M2.m02 + M1.m30 * M2.m03, M1.m01 * M2.m00 + M1.m11 * M2.m01 + M1.m21 * M2.m02 + M1.m31 * M2.m03, M1.m02 * M2.m00 + M1.m12 * M2.m01 + M1.m22 * M2.m02 + M1.m32 * M2.m03, M1.m03 * M2.m00 + M1.m13 * M2.m01 + M1.m23 * M2.m02 + M1.m33 * M2.m03,
+                M1.m00 * M2.m10 + M1.m10 * M2.m11 + M1.m20 * M2.m12 + M1.m30 * M2.m13, M1.m01 * M2.m10 + M1.m11 * M2.m11 + M1.m21 * M2.m12 + M1.m31 * M2.m13, M1.m02 * M2.m10 + M1.m12 * M2.m11 + M1.m22 * M2.m12 + M1.m32 * M2.m13, M1.m03 * M2.m10 + M1.m13 * M2.m11 + M1.m23 * M2.m12 + M1.m33 * M2.m13,
+                M1.m00 * M2.m20 + M1.m10 * M2.m21 + M1.m20 * M2.m22 + M1.m30 * M2.m23, M1.m01 * M2.m20 + M1.m11 * M2.m21 + M1.m21 * M2.m22 + M1.m31 * M2.m23, M1.m02 * M2.m20 + M1.m12 * M2.m21 + M1.m22 * M2.m22 + M1.m32 * M2.m23, M1.m03 * M2.m20 + M1.m13 * M2.m21 + M1.m23 * M2.m22 + M1.m33 * M2.m23,
+                M1.m00 * M2.m30 + M1.m10 * M2.m31 + M1.m20 * M2.m32 + M1.m30 * M2.m33, M1.m01 * M2.m30 + M1.m11 * M2.m31 + M1.m21 * M2.m32 + M1.m31 * M2.m33, M1.m02 * M2.m30 + M1.m12 * M2.m31 + M1.m22 * M2.m32 + M1.m32 * M2.m33, M1.m03 * M2.m30 + M1.m13 * M2.m31 + M1.m23 * M2.m32 + M1.m33 * M2.m33
+                );
+            
         }
+
+        ////create a function to multiply a Matrix4 by another Matrix4
+        //public static Matrix4 operator *(Matrix4 M2, Matrix4 M1)
+        //{
+        //    return new Matrix4(
+        //        M1.m00 * M2.m00 + M1.m01 * M2.m10 + M1.m02 * M2.m20 + M1.m03 * M2.m30, M1.m00 * M2.m01 + M1.m01 * M2.m11 + M1.m02 * M2.m21 + M1.m03 * M2.m31, M1.m00 * M2.m02 + M1.m01 * M2.m12 + M1.m02 * M2.m22 + M1.m03 * M2.m32, M1.m00 * M2.m03 + M1.m01 * M2.m13 + M1.m02 * M2.m23 + M1.m03 * M2.m33,
+        //        M1.m10 * M2.m00 + M1.m11 * M2.m10 + M1.m12 * M2.m20 + M1.m13 * M2.m30, M1.m10 * M2.m01 + M1.m11 * M2.m11 + M1.m12 * M2.m21 + M1.m13 * M2.m31, M1.m10 * M2.m02 + M1.m11 * M2.m12 + M1.m12 * M2.m22 + M1.m13 * M2.m32, M1.m10 * M2.m03 + M1.m11 * M2.m13 + M1.m12 * M2.m23 + M1.m13 * M2.m33,
+        //        M1.m20 * M2.m00 + M1.m21 * M2.m10 + M1.m22 * M2.m20 + M1.m23 * M2.m30, M1.m20 * M2.m01 + M1.m21 * M2.m11 + M1.m22 * M2.m21 + M1.m23 * M2.m31, M1.m20 * M2.m02 + M1.m21 * M2.m12 + M1.m22 * M2.m22 + M1.m23 + M2.m32, M1.m20 * M2.m03 + M1.m21 * M2.m13 + M1.m22 * M2.m23 + M1.m23 * M2.m33,
+        //        M1.m30 * M2.m00 + M1.m31 * M2.m10 + M1.m32 * M2.m20 + M1.m33 * M2.m30, M1.m30 * M2.m01 + M1.m31 * M2.m11 + M1.m32 * M2.m21 + M1.m33 * M2.m31, M1.m30 * M2.m02 + M1.m31 * M2.m12 + M1.m32 * M2.m22 + M1.m33 + M2.m32, M1.m30 * M2.m03 + M1.m31 * M2.m13 + M1.m32 * M2.m23 + M1.m33 * M2.m33);
+        //}
     }
 }

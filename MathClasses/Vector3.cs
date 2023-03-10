@@ -49,9 +49,9 @@ namespace MathClasses
         //create a function to multiply a Vector3 by a Matrix3
         public static Vector3 operator *(Matrix3 M, Vector3 V)
         {
-            return new Vector3(V.x * M.m00 + V.y * M.m01 + V.z * M.m02,
-                               V.x * M.m10 + V.y * M.m11 + V.z * M.m12,
-                               V.x * M.m20 + V.y * M.m21 + V.z * M.m22);
+            return new Vector3(V.x * M.m00 + V.y * M.m10 + V.z * M.m20,
+                               V.x * M.m01 + V.y * M.m11 + V.z * M.m21,
+                               V.x * M.m02 + V.y * M.m12 + V.z * M.m22);
         }
 
         //create a function to divide a vector3 by a scaler

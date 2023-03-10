@@ -50,10 +50,10 @@ namespace MathClasses
         //create a function to multiply a Vector4 by a Matrix4
         public static Vector4 operator *(Matrix4 M, Vector4 V)
         {
-            return new Vector4(V.x * M.m00 + V.y * M.m01 + V.z * M.m02 + V.w * M.m03,
-                               V.x * M.m10 + V.y * M.m11 + V.z * M.m12 + V.w * M.m13,
-                               V.x * M.m20 + V.y * M.m21 + V.z * M.m22 + V.w * M.m23,
-                               V.x * M.m30 + V.y * M.m31 + V.z * M.m32 + V.w * M.m33);
+            return new Vector4(V.x * M.m00 + V.y * M.m10 + V.z * M.m20 + V.w * M.m30,
+                               V.x * M.m01 + V.y * M.m11 + V.z * M.m21 + V.w * M.m31,
+                               V.x * M.m02 + V.y * M.m12 + V.z * M.m22 + V.w * M.m32,
+                               V.x * M.m03 + V.y * M.m13 + V.z * M.m23 + V.w * M.m33);
         }
 
         //create a function to divide a Vector4 by a scaler
