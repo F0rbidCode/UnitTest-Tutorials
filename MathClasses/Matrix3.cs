@@ -178,7 +178,7 @@ namespace MathClasses
         }
 
         //create a function to translate a Matrix3
-        void Translate(float x, float y)
+        public void Translate(float x, float y)
         {
             m20 += x; m21 += y;
         }
