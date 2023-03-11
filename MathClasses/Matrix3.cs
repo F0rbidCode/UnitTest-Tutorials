@@ -174,7 +174,7 @@ namespace MathClasses
         //create a function to set stranslation information in Matrix3
         public void SetTranslation(float x, float y)
         {
-            m20 = x; m21 = y; m22 = 1;
+            m20 = x; m21 = y; m22 = 1;            
         }
 
         //create a function to translate a Matrix3

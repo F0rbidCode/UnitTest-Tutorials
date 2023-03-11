@@ -2,6 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MathClasses;
 
+//All tests below include the following attributes in some form.
+//DataTestMethod: enables data used for testing to originate outside of the test code.
+//DataRow: represents a single run of the test and what values will be used during the test.
+//Note - Each DataRow must have as many parameters as the test function does. The types must also match.
+
 namespace UnitTestProject
 {
     [TestClass]
@@ -9,14 +14,20 @@ namespace UnitTestProject
     {
         const float DEFAULT_TOLERANCE = 0.0001f;
 
-        static void AreComparable(Vector3 expected, Vector3 actual, float tolerance = DEFAULT_TOLERANCE)
+        /// <summary>
+        /// Helper function for asserting on the state of complex objects. Determines whether two objects are approximately equivelant to each other.
+        /// </summary>
+        /// <param name="expected">Expected value</param>
+        /// <param name="actual">Actual Value</param>
+        /// <param name="tolerance">Acceptable delta between <paramref name="expected"/> and <paramref name="actual"/></param>
+        static void AreEquivalent(Vector3 expected, Vector3 actual, float tolerance = DEFAULT_TOLERANCE)
         {
             Assert.AreEqual(expected.x, actual.x, tolerance);
             Assert.AreEqual(expected.y, actual.y, tolerance);
             Assert.AreEqual(expected.z, actual.z, tolerance);
         }
 
-        static void AreComparable(Vector4 expected, Vector4 actual, float tolerance = DEFAULT_TOLERANCE)
+        static void AreEquivalent(Vector4 expected, Vector4 actual, float tolerance = DEFAULT_TOLERANCE)
         {
             Assert.AreEqual(expected.x, actual.x, tolerance);
             Assert.AreEqual(expected.y, actual.y, tolerance);
@@ -24,7 +35,7 @@ namespace UnitTestProject
             Assert.AreEqual(expected.w, actual.w, tolerance);
         }
 
-        static void AreComparable(Matrix3 expected, Matrix3 actual, float tolerance = DEFAULT_TOLERANCE)
+        static void AreEquivalent(Matrix3 expected, Matrix3 actual, float tolerance = DEFAULT_TOLERANCE)
         {
             Assert.AreEqual(expected.m00, actual.m00, tolerance);
             Assert.AreEqual(expected.m01, actual.m01, tolerance);
@@ -37,7 +48,7 @@ namespace UnitTestProject
             Assert.AreEqual(expected.m22, actual.m22, tolerance);
         }
 
-        static void AreComparable(Matrix4 expected, Matrix4 actual, float tolerance = DEFAULT_TOLERANCE)
+        static void AreEquivalent(Matrix4 expected, Matrix4 actual, float tolerance = DEFAULT_TOLERANCE)
         {
             Assert.AreEqual(expected.m00, actual.m00, tolerance);
             Assert.AreEqual(expected.m01, actual.m01, tolerance);
@@ -57,6 +68,12 @@ namespace UnitTestProject
             Assert.AreEqual(expected.m33, actual.m33, tolerance);
         }
 
+        /// <summary>
+        /// Helper function for asserting on the state of complex data structures. Determines whether two objects are equivelant to each other.
+        /// </summary>
+        /// <remarks>Not suitable for most use-cases.</remarks>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
         static void AreEqual(Vector3 expected, Vector3 actual)
         {
             Assert.AreEqual(expected.x, actual.x);
@@ -102,649 +119,857 @@ namespace UnitTestProject
             Assert.AreEqual(expected.m33, actual.m33);
         }
 
-        [TestMethod]
-        public void Vector3Construction()
+        /// <summary>
+        /// Helper function to remove reliance on correct implementation of student-made constructors. Creates an object and sets all fields individually.
+        /// </summary>
+        /// <returns>Newly created object with provided values set.</returns>
+        static Vector3 CreateVec3(float a, float b, float c)
         {
-            Vector3 expected = new Vector3();
-            expected.x = 3.4f;
-            expected.y = 2.3f;
-            expected.z = 1.2f;
+            var v = new Vector3();
+            v.x = a; v.y = b; v.z = c;
+            return v;
+        }
+        static Vector4 CreateVec4(float a, float b, float c, float d)
+        {
+            var v = new Vector4();
+            v.x = a; v.y = b; v.z = c; v.w = d;
+            return v;
+        }
+        static Matrix3 CreateMat3(float s)
+        {
+            var m = new Matrix3();
 
-            Vector3 v3a = new Vector3(expected.x, expected.y, expected.z);
+            m.m00 = m.m11 = m.m22 = s;
+            m.m01 = m.m02 = 0;
+            m.m10 = m.m12 = 0;
+            m.m20 = m.m21 = 0;
 
-            AreEqual(expected, v3a);
+            return m;
+        }
+        static Matrix3 CreateMat3(float a, float b, float c,
+                                float d, float e, float f,
+                                float g, float h, float i)
+        {
+            var m = new Matrix3();
+
+            m.m00 = a; m.m01 = b; m.m02 = c;
+            m.m10 = d; m.m11 = e; m.m12 = f;
+            m.m20 = g; m.m21 = h; m.m22 = i;
+
+            return m;
+        }
+        static Matrix4 CreateMat4(float s)
+        {
+            var mat = new Matrix4();
+
+            mat.m00 = mat.m11 = mat.m22 = mat.m33 = s;
+            mat.m01 = mat.m02 = mat.m03 = mat.m10 = mat.m12 = mat.m13 = mat.m20 = mat.m21 = mat.m23 = mat.m30 = mat.m31 = mat.m32 = 0;
+
+            return mat;
+        }
+        static Matrix4 CreateMat4(float a, float b, float c, float d,
+            float e, float f, float g, float h,
+            float i, float j, float k, float l,
+            float m, float n, float o, float p)
+        {
+            var mat = new Matrix4();
+
+            mat.m00 = a; mat.m01 = b; mat.m02 = c; mat.m03 = d;
+            mat.m10 = e; mat.m11 = f; mat.m12 = g; mat.m13 = h;
+            mat.m20 = i; mat.m21 = j; mat.m22 = k; mat.m23 = l;
+            mat.m30 = m; mat.m31 = n; mat.m32 = o; mat.m33 = p;
+
+            return mat;
+        }
+        static Colour CreateColour(UInt32 value)
+        {
+            var col = new Colour();
+
+            col.colour = value;
+
+            return col;
+        }
+        static Colour CreateColour(byte r, byte g, byte b, byte a)
+        {
+            var col = new Colour();
+
+            col.colour = (UInt32)r << 24 | (UInt32)g << 16 | (UInt32)b << 8 | (UInt32)a;
+
+            return col;
         }
 
-        [TestMethod]
-        public void Vector4Construction()
+
+        [DataRow(3.4f, 2.3f, 1.2f)]
+        [DataRow(0.0f, 0.0f, 0.0f)]
+        [DataRow(0.0f, 0.0f, 1.0f)]
+        [DataTestMethod]
+        public void Vector3Construction(float x, float y, float z)
         {
-            Vector4 expected = new Vector4();
-            expected.x = 3.4f;
-            expected.y = 2.3f;
-            expected.z = 1.2f;
-            expected.w = 0.1f;
+            var v3a = new Vector3(x, y, z);
 
-            Vector4 v4a = new Vector4(expected.x, expected.y, expected.z, expected.w);
-
-            AreEqual(expected, v4a);
+            AreEqual(CreateVec3(x, y, z), v3a);
         }
 
-        [TestMethod]
-        public void Vector3Addition()
+        [DataRow(3.4f, 2.3f, 1.2f, 0.1f)]
+        [DataRow(0.0f, 0.0f, 0.0f, 0.0f)]
+        [DataRow(0.0f, 0.0f, 0.0f, 1.0f)]
+        [DataTestMethod]
+        public void Vector4Construction(float x, float y, float z, float w)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3b = new Vector3(5, 3.99f, -12);
+            var v3a = new Vector4(x, y, z, w);
+
+            AreEqual(CreateVec4(x, y, z, w), v3a);
+        }
+
+        [DataRow(0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f, 3.99f, -12.0f)]
+        [DataTestMethod]
+        public void Vector3Addition(float x1, float y1, float z1, float x2, float y2, float z2)
+        {
+            Vector3 v3a = CreateVec3(x1, y1, z1);
+            Vector3 v3b = CreateVec3(x2, y2, z2);
             Vector3 v3c = v3a + v3b;
 
-            AreComparable(new Vector3(18.5f, -44.24f, 850), v3c);
+            AreEquivalent(CreateVec3(x1 + x2, y1 + y2, z1 + z2), v3c);
         }
 
-        [TestMethod]
-        public void Vector4Addition()
+        [DataRow(0, 0, 0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 0, 5.0f, 3.99f, -12.0f, 1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 9.11f, 5.0f, 3.99f, -12.0f, -2.28f)]
+        [DataTestMethod]
+        public void Vector4Addition(float x1, float y1, float z1, float w1, float x2, float y2, float z2, float w2)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4b = new Vector4(5, 3.99f, -12, 1);
+            Vector4 v4a = CreateVec4(x1, y1, z1, w1);
+            Vector4 v4b = CreateVec4(x2, y2, z2, w2);
             Vector4 v4c = v4a + v4b;
 
-            AreComparable(new Vector4(18.5f, -44.24f, 850, 1), v4c);
+            AreEquivalent(CreateVec4(x1 + x2, y1 + y2, z1 + z2, w1 + w2), v4c);
         }
 
-        [TestMethod]
-        public void Vector3Subtraction()
+        [DataRow(0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f, 3.99f, -12.0f)]
+        [DataTestMethod]
+        public void Vector3Subtraction(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3b = new Vector3(5, 3.99f, -12);
+            Vector3 v3a = CreateVec3(x1, y1, z1);
+            Vector3 v3b = CreateVec3(x2, y2, z2);
             Vector3 v3c = v3a - v3b;
 
-            AreComparable(new Vector3(8.5f, -52.22f, 874), v3c);
+            AreEquivalent(CreateVec3(x1 - x2, y1 - y2, z1 - z2), v3c);
         }
 
-        [TestMethod]
-        public void Vector4Subtraction()
+        [DataRow(0, 0, 0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 0, 5.0f, 3.99f, -12.0f, 1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 9.11f, 5.0f, 3.99f, -12.0f, -2.28f)]
+        [DataTestMethod]
+        public void Vector4Subtraction(float x1, float y1, float z1, float w1, float x2, float y2, float z2, float w2)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4b = new Vector4(5, 3.99f, -12, 1);
+            Vector4 v4a = CreateVec4(x1, y1, z1, w1);
+            Vector4 v4b = CreateVec4(x2, y2, z2, w2);
             Vector4 v4c = v4a - v4b;
 
-            AreComparable(new Vector4(8.5f, -52.22f, 874, -1), v4c);
+            AreEquivalent(CreateVec4(x1 - x2, y1 - y2, z1 - z2, w1 - w2), v4c);
         }
 
-        [TestMethod]
-        public void Vector3PostScale()
+        [DataRow(0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f)]
+        [DataTestMethod]
+        public void Vector3PostScale(float x, float y, float z, float s)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3c = v3a * 0.256f;
+            Vector3 v3a = CreateVec3(x, y, z);
+            Vector3 v3c = v3a * s;
 
-            AreComparable(new Vector3(3.45600008965f, -12.3468809128f, 220.672012329f), v3c);
+            AreEquivalent(CreateVec3(x * s, y * s, z * s), v3c);
         }
 
-        [TestMethod]
-        public void Vector4PostScale()
+        [DataRow(0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f, 9.12f)]
+        [DataTestMethod]
+        public void Vector4PostScale(float x, float y, float z, float w, float s)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4c = v4a * 4.89f;
+            Vector4 v4a = CreateVec4(x, y, z, w);
+            Vector4 v4c = v4a * s;
 
-            AreComparable(new Vector4(66.0149993896f, -235.844696045f, 4215.1796875f, 0), v4c);
+            AreEquivalent(CreateVec4(x * s, y * s, z * s, w * s), v4c);
         }
 
-        [TestMethod]
-        public void Vector3PreScale()
+        [DataRow(0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f)]
+        [DataTestMethod]
+        public void Vector3PreScale(float x, float y, float z, float s)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3c = 0.256f * v3a;
+            Vector3 v3a = CreateVec3(x, y, z);
+            Vector3 v3c = s * v3a;
 
-            AreComparable(new Vector3(3.45600008965f, -12.3468809128f, 220.672012329f), v3c);
+            AreEquivalent(CreateVec3(x * s, y * s, z * s), v3c);
         }
 
-        [TestMethod]
-        public void Vector4PreScale()
+        [DataRow(0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f, 9.12f)]
+        [DataTestMethod]
+        public void Vector4PreScale(float x, float y, float z, float w, float s)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4c = 4.89f * v4a;
+            Vector4 v4a = CreateVec4(x, y, z, w);
+            Vector4 v4c = s * v4a;
 
-            AreComparable(new Vector4(66.0149993896f, -235.844696045f, 4215.1796875f, 0), v4c);
+            AreEquivalent(CreateVec4(x * s, y * s, z * s, w * s), v4c);
         }
 
-        [TestMethod]
-        public void Vector3Dot()
+        [DataRow(0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f, 3.99f, -12.0f)]
+        [DataTestMethod]
+        public void Vector3Dot(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3b = new Vector3(5, 3.99f, -12);
+            Vector3 v3a = CreateVec3(x1, y1, z1);
+            Vector3 v3b = CreateVec3(x2, y2, z2);
             float dot3 = v3a.Dot(v3b);
 
-            Assert.AreEqual(-10468.9375f, dot3, DEFAULT_TOLERANCE);
+            Assert.AreEqual(x1 * x2 + y1 * y2 + z1 * z2, dot3, DEFAULT_TOLERANCE);
         }
 
-        [TestMethod]
-        public void Vector4Dot()
+        [DataRow(0, 0, 0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1, -1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 0, 5.0f, 3.99f, -12.0f, 1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 9.11f, 5.0f, 3.99f, -12.0f, -2.28f)]
+        [DataTestMethod]
+        public void Vector4Dot(float x1, float y1, float z1, float w1, float x2, float y2, float z2, float w2)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4b = new Vector4(5, 3.99f, -12, 1);
+            Vector4 v4a = CreateVec4(x1, y1, z1, w1);
+            Vector4 v4b = CreateVec4(x2, y2, z2, w2);
             float dot4 = v4a.Dot(v4b);
 
-            Assert.AreEqual(-10468.9375f, dot4, DEFAULT_TOLERANCE);
+            Assert.AreEqual(x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2, dot4, DEFAULT_TOLERANCE);
         }
 
-        [TestMethod]
-        public void Vector3Cross()
+        [DataRow(0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1)]
+        [DataRow(1, 0, 1, 0, 1, 0)]
+        [DataRow(-1, -1, -1, 1, 1, 1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 5.0f, 3.99f, -12.0f)]
+        [DataTestMethod]
+        public void Vector3Cross(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3b = new Vector3(5, 3.99f, -12);
+            Vector3 v3a = CreateVec3(x1, y1, z1);
+            Vector3 v3b = CreateVec3(x2, y2, z2);
             Vector3 v3c = v3a.Cross(v3b);
 
-            AreComparable(new Vector3(-2860.62011719f, 4472.00000000f, 295.01498413f),
+            var vValidateA = new System.Numerics.Vector3(x1, y1, z1);
+            var vValidateB = new System.Numerics.Vector3(x2, y2, z2);
+            var vValidate = System.Numerics.Vector3.Cross(vValidateA, vValidateB);
+
+            AreEquivalent(CreateVec3(vValidate.X, vValidate.Y, vValidate.Z),
                 v3c);
         }
 
-        [TestMethod]
-        public void Vector4Cross()
+        [DataRow(0, 0, 0, 0, 0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1, 1, 1, 1, 1)]
+        [DataRow(1, 0, 1, 1, 0, 1, 0, 1)]
+        [DataRow(-1, -1, -1, -1, 1, 1, 1, 1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 0, 5.0f, 3.99f, -12.0f, 1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 9.11f, 5.0f, 3.99f, -12.0f, -2.28f)]
+        [DataTestMethod]
+        public void Vector4Cross(float x1, float y1, float z1, float w1, float x2, float y2, float z2, float w2)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4b = new Vector4(5, 3.99f, -12, 1);
+            Vector4 v4a = CreateVec4(x1, y1, z1, w1);
+            Vector4 v4b = CreateVec4(x2, y2, z2, w2);
             Vector4 v4c = v4a.Cross(v4b);
 
-            AreComparable(v4c, new Vector4(-2860.62011719f, 4472.00000000f, 295.01498413f, 0));
+            var vValidateA = new System.Numerics.Vector3(x1, y1, z1);
+            var vValidateB = new System.Numerics.Vector3(x2, y2, z2);
+            var vValidate = System.Numerics.Vector3.Cross(vValidateA, vValidateB);
+
+            AreEquivalent(CreateVec4(vValidate.X, vValidate.Y, vValidate.Z, 0), v4c);
         }
 
-        [TestMethod]
-        public void Vector3Magnitude()
+
+        [DataRow(0, 0, 0)]
+        [DataRow(1, 1, 1)]
+        [DataRow(-1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f)]
+        [DataTestMethod]
+        public void Vector3Magnitude(float x, float y, float z)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
+            Vector3 v3a = CreateVec3(x, y, z);
             float mag3 = v3a.Magnitude();
 
-            Assert.AreEqual(863.453735352f, mag3, DEFAULT_TOLERANCE);
+            Assert.AreEqual((float)Math.Sqrt(x * x + y * y + z * z), mag3, DEFAULT_TOLERANCE);
         }
 
-        [TestMethod]
-        public void Vector4Magnitude()
+        [DataRow(0, 0, 0, 0)]
+        [DataRow(1, 1, 1, 1)]
+        [DataRow(-1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 88.47f)]
+        [DataTestMethod]
+        public void Vector4Magnitude(float x, float y, float z, float w)
         {
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
+            Vector4 v4a = CreateVec4(x, y, z, w);
             float mag4 = v4a.Magnitude();
 
-            Assert.AreEqual(863.453735352f, mag4, DEFAULT_TOLERANCE);
+            Assert.AreEqual((float)Math.Sqrt(x * x + y * y + z * z + w * w), mag4, DEFAULT_TOLERANCE);
         }
 
-        [TestMethod]
-        public void Vector3Normalise()
+        [DataRow(1, 1, 1)]
+        [DataRow(1, 0, 0)]
+        [DataRow(-1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f)]
+        [DataRow(0.0156349f, -0.0558571f, 0.998316f)]
+        [DataTestMethod]
+        public void Vector3Normalise(float x, float y, float z)
         {
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
+            Vector3 v3a = CreateVec3(x, y, z);
             v3a.Normalize();
 
-            AreComparable(new Vector3(0.0156349f, -0.0558571f, 0.998316f),
+            var vValidate = new System.Numerics.Vector3(x, y, z);
+            vValidate = System.Numerics.Vector3.Normalize(vValidate);
+
+            AreEquivalent(CreateVec3(vValidate.X, vValidate.Y, vValidate.Z),
                 v3a);
         }
 
-        [TestMethod]
-        public void Vector4Normalise()
+        [DataRow(1, 1, 1, 1)]
+        [DataRow(1, 0, 0, 0)]
+        [DataRow(-1, -1, -1, -1)]
+        [DataRow(13.5f, -48.23f, 862.0f, 99.81f)]
+        [DataRow(0.0156349f, -0.0558571f, 0.998316f, 0)]
+        [DataRow(0.270935f, -0.0537745f, 0.961094f, 0)]
+        [DataTestMethod]
+        public void Vector4Normalise(float x, float y, float z, float w)
         {
-            Vector4 v4a = new Vector4(243, -48.23f, 862, 0);
+            Vector4 v4a = CreateVec4(x, y, z, w);
             v4a.Normalize();
 
-            AreComparable(new Vector4(0.270935f, -0.0537745f, 0.961094f, 0), v4a);
+            var vValidate = new System.Numerics.Vector4(x, y, z, w);
+            vValidate = System.Numerics.Vector4.Normalize(vValidate);
+
+            AreEquivalent(CreateVec4(vValidate.X, vValidate.Y, vValidate.Z, vValidate.W), v4a);
         }
 
-        [TestMethod]
-        public void Matrix3Construction()
+        [DataRow(11.22f, 22.33f, 33.44f, 44.55f, 55.66f, 66.77f, 77.88f, 88.99f, 99.01f)]
+        [DataRow(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f)]
+        [DataRow(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f)]
+        [DataTestMethod]
+        public void Matrix3Construction(float a, float b, float c, float d, float e, float f, float g, float h, float i)
         {
-            Matrix3 expected = new Matrix3();
-            expected.m00 = 11.22f;
-            expected.m01 = 22.33f;
-            expected.m02 = 33.44f;
-            expected.m10 = 44.55f;
-            expected.m11 = 55.66f;
-            expected.m12 = 66.77f;
-            expected.m20 = 77.88f;
-            expected.m21 = 88.99f;
-            expected.m22 = 99.01f;
+            var m3a = new Matrix3(a, b, c,
+                                      d, e, f,
+                                      g, h, i);
 
-            Matrix3 m3a = new Matrix3(expected.m00, expected.m01, expected.m02,
-                                      expected.m10, expected.m11, expected.m12,
-                                      expected.m20, expected.m21, expected.m22);
-
-            AreEqual(expected, m3a);
+            AreEqual(CreateMat3(a, b, c, d, e, f, g, h, i), m3a);
         }
 
-        [TestMethod]
-        public void Matrix4Construction()
+        [DataRow(1.0f)]
+        [DataRow(4.0f)]
+        [DataRow(0.5f)]
+        [DataTestMethod]
+        public void Matrix3ScaleConstruction(float s)
         {
-            Matrix4 expected = new Matrix4();
-            expected.m00 = 11.22f;
-            expected.m01 = 22.33f;
-            expected.m02 = 33.44f;
-            expected.m03 = 44.55f;
-            expected.m10 = 55.66f;
-            expected.m11 = 66.77f;
-            expected.m12 = 77.88f;
-            expected.m13 = 88.99f;
-            expected.m20 = 99.01f;
-            expected.m21 = 1.11f;
-            expected.m22 = 11.22f;
-            expected.m23 = 22.33f;
-            expected.m30 = 33.44f;
-            expected.m31 = 44.55f;
-            expected.m32 = 55.66f;
-            expected.m33 = 66.77f;
+            var m3a = new Matrix3(s);
 
-            Matrix4 m3a = new Matrix4(expected.m00, expected.m01, expected.m02, expected.m03,
-                                      expected.m10, expected.m11, expected.m12, expected.m13,
-                                      expected.m20, expected.m21, expected.m22, expected.m23,
-                                      expected.m30, expected.m31, expected.m32, expected.m33);
-
-            AreEqual(expected, m3a);
+            AreEqual(CreateMat3(s), m3a);
         }
 
-        [TestMethod]
-        public void Matrix3SetRotateX()
+        [DataRow(11.22f, 22.33f, 33.44f, 44.55f, 55.66f, 66.77f, 77.88f, 88.99f, 99.01f, 1.11f, 11.22f, 22.33f, 33.44f, 44.55f, 55.66f, 66.77f)]
+        [DataRow(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f)]
+        [DataRow(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f)]
+        [DataTestMethod]
+        public void Matrix4Construction(float a, float b, float c, float d, float e, float f, float g, float h, float i,
+                                        float j, float k, float l, float m, float n, float o, float p)
         {
-            Matrix3 m3a = new Matrix3();
-            m3a.SetRotateX(3.98f);
+            var m3a = new Matrix4(a, b, c, d,
+                                      e, f, g, h,
+                                      i, j, k, l,
+                                      m, n, o, p);
 
-            AreComparable(new Matrix3(1, 0, 0, 0, -0.668648f, -0.743579f, 0, 0.743579f, -0.668648f),
+            AreEqual(CreateMat4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p), m3a);
+        }
+
+        [DataRow(0.0f, 1, 0)]
+        [DataRow(15.0f, 1, 0)]
+        [DataRow(15.0f, 0, 0)]
+        [DataRow(15.0f, 0, 1)]
+        [DataRow(15.0f, 1, 1)]
+        [DataRow(30.0f, 1, 0)]
+        [DataRow(45.0f, 1, 0)]
+        [DataRow(90.0f, 1, 0)]
+        [DataRow(180.0f, 1, 0)]
+        [DataRow(270.0f, 1, 0)]
+        [DataRow(360.0f, 1, 0)]
+        [DataTestMethod]
+        public void Matrix3SetRotateX(float r, float s, float o)
+        {
+            float rAsRad = (float)(r * (180.0 / Math.PI));
+
+            Matrix3 m3a = CreateMat3(s, o, o, o, s, o, o, o, s);
+            m3a.SetRotateX(rAsRad);
+
+            double sinVal = Math.Sin(rAsRad);
+            double cosVal = Math.Cos(rAsRad);
+
+            AreEquivalent(CreateMat3(1, 0, 0, 0, (float)cosVal, (float)sinVal, 0, (float)-sinVal, (float)cosVal),
                 m3a);
         }
 
-        [TestMethod]
-        public void Matrix4SetRotateX()
+        [DataRow(0.0f, 1, 0)]
+        [DataRow(15.0f, 1, 0)]
+        [DataRow(15.0f, 0, 0)]
+        [DataRow(15.0f, 0, 1)]
+        [DataRow(15.0f, 1, 1)]
+        [DataRow(30.0f, 1, 0)]
+        [DataRow(45.0f, 1, 0)]
+        [DataRow(90.0f, 1, 0)]
+        [DataRow(180.0f, 1, 0)]
+        [DataRow(270.0f, 1, 0)]
+        [DataRow(360.0f, 1, 0)]
+        [DataTestMethod]
+        public void Matrix4SetRotateX(float r, float s, float o)
         {
-            Matrix4 m4a = new Matrix4();
-            m4a.SetRotateX(4.5f);
+            float rAsRad = (float)(r * (180.0 / Math.PI));
 
-            AreComparable(new Matrix4(1, 0, 0, 0, 0, -0.210796f, -0.97753f, 0, 0, 0.97753f, -0.210796f, 0, 0, 0, 0, 1),
+            Matrix4 m4a = CreateMat4(s, o, o, o, o, s, o, o, o, o, s, o, o, o, o, s);
+            m4a.SetRotateX(rAsRad);
+
+            double sinVal = Math.Sin(rAsRad);
+            double cosVal = Math.Cos(rAsRad);
+
+            AreEquivalent(CreateMat4(1, 0, 0, 0, 0, (float)cosVal, (float)sinVal, 0, 0, (float)-sinVal, (float)cosVal, 0, 0, 0, 0, 1),
                 m4a);
         }
 
-        [TestMethod]
-        public void Matrix3SetRotateY()
+        [DataRow(0.0f, 1, 0)]
+        [DataRow(15.0f, 1, 0)]
+        [DataRow(15.0f, 0, 0)]
+        [DataRow(15.0f, 0, 1)]
+        [DataRow(15.0f, 1, 1)]
+        [DataRow(30.0f, 1, 0)]
+        [DataRow(45.0f, 1, 0)]
+        [DataRow(90.0f, 1, 0)]
+        [DataRow(180.0f, 1, 0)]
+        [DataRow(270.0f, 1, 0)]
+        [DataRow(360.0f, 1, 0)]
+        [DataTestMethod]
+        public void Matrix3SetRotateY(float r, float s, float o)
         {
-            Matrix3 m3b = new Matrix3();
-            m3b.SetRotateY(1.76f);
+            float rAsRad = (float)(r * (180.0 / Math.PI));
 
-            AreComparable(new Matrix3(-0.188077f, 0, -0.982154f, 0, 1, 0, 0.982154f, 0, -0.188077f),
-                m3b);
+            Matrix3 m3a = CreateMat3(s, o, o, o, s, o, o, o, s);
+            m3a.SetRotateY(rAsRad);
+
+            double sinVal = Math.Sin(rAsRad);
+            double cosVal = Math.Cos(rAsRad);
+
+            AreEquivalent(CreateMat3((float)cosVal, 0, (float)-sinVal, 0, 1, 0, (float)sinVal, 0, (float)cosVal),
+                m3a);
         }
 
-        [TestMethod]
-        public void Matrix4SetRotateY()
+        [DataRow(0.0f, 1, 0)]
+        [DataRow(15.0f, 1, 0)]
+        [DataRow(15.0f, 0, 0)]
+        [DataRow(15.0f, 0, 1)]
+        [DataRow(15.0f, 1, 1)]
+        [DataRow(30.0f, 1, 0)]
+        [DataRow(45.0f, 1, 0)]
+        [DataRow(90.0f, 1, 0)]
+        [DataRow(180.0f, 1, 0)]
+        [DataRow(270.0f, 1, 0)]
+        [DataRow(360.0f, 1, 0)]
+        [DataTestMethod]
+        public void Matrix4SetRotateY(float r, float s, float o)
         {
-            Matrix4 m4b = new Matrix4();
-            m4b.SetRotateY(-2.6f);
+            float rAsRad = (float)(r * (180.0 / Math.PI));
 
-            AreComparable(new Matrix4(-0.856889f, 0, 0.515501f, 0, 0, 1, 0, 0, -0.515501f, 0, -0.856889f, 0, 0, 0, 0, 1),
-                m4b);
+            Matrix4 m4a = CreateMat4(s, o, o, o, o, s, o, o, o, o, s, o, o, o, o, s);
+            m4a.SetRotateY(rAsRad);
+
+            double sinVal = Math.Sin(rAsRad);
+            double cosVal = Math.Cos(rAsRad);
+
+            AreEquivalent(CreateMat4((float)cosVal, 0, (float)-sinVal, 0, 0, 1, 0, 0, (float)sinVal, 0, (float)cosVal, 0, 0, 0, 0, 1),
+                m4a);
         }
 
-        [TestMethod]
-        public void Matrix3SetRotateZ()
+        [DataRow(0.0f, 1, 0)]
+        [DataRow(15.0f, 1, 0)]
+        [DataRow(15.0f, 0, 0)]
+        [DataRow(15.0f, 0, 1)]
+        [DataRow(15.0f, 1, 1)]
+        [DataRow(30.0f, 1, 0)]
+        [DataRow(45.0f, 1, 0)]
+        [DataRow(90.0f, 1, 0)]
+        [DataRow(180.0f, 1, 0)]
+        [DataRow(270.0f, 1, 0)]
+        [DataRow(360.0f, 1, 0)]
+        [DataTestMethod]
+        public void Matrix3SetRotateZ(float r, float s, float o)
         {
-            Matrix3 m3c = new Matrix3();
-            m3c.SetRotateZ(9.62f);
+            float rAsRad = (float)(r * (180.0 / Math.PI));
 
-            AreComparable(new Matrix3(-0.981005f, -0.193984f, 0, 0.193984f, -0.981005f, 0, 0, 0, 1),
-                m3c);
+            Matrix3 m3a = CreateMat3(s, o, o, o, s, o, o, o, s);
+            m3a.SetRotateZ(rAsRad);
+
+            double sinVal = Math.Sin(rAsRad);
+            double cosVal = Math.Cos(rAsRad);
+
+            AreEquivalent(CreateMat3((float)cosVal, (float)sinVal, 0, (float)-sinVal, (float)cosVal, 0, 0, 0, 1),
+                m3a);
         }
 
-        [TestMethod]
-        public void Matrix4SetRotateZ()
+        [DataRow(0.0f, 1, 0)]
+        [DataRow(15.0f, 1, 0)]
+        [DataRow(15.0f, 0, 0)]
+        [DataRow(15.0f, 0, 1)]
+        [DataRow(15.0f, 1, 1)]
+        [DataRow(30.0f, 1, 0)]
+        [DataRow(45.0f, 1, 0)]
+        [DataRow(90.0f, 1, 0)]
+        [DataRow(180.0f, 1, 0)]
+        [DataRow(270.0f, 1, 0)]
+        [DataRow(360.0f, 1, 0)]
+        [DataTestMethod]
+        public void Matrix4SetRotateZ(float r, float s, float o)
         {
-            Matrix4 m4c = new Matrix4();
-            m4c.SetRotateZ(0.72f);
+            float rAsRad = (float)(r * (180.0 / Math.PI));
 
-            AreComparable(new Matrix4(0.751806f, 0.659385f, 0, 0, -0.659385f, 0.751806f, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1),
-                m4c);
+            Matrix4 m4a = CreateMat4(s, o, o, o, o, s, o, o, o, o, s, o, o, o, o, s);
+            m4a.SetRotateZ(rAsRad);
+
+            double sinVal = Math.Sin(rAsRad);
+            double cosVal = Math.Cos(rAsRad);
+
+            AreEquivalent(CreateMat4((float)cosVal, (float)sinVal, 0, 0, (float)-sinVal, (float)cosVal, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1),
+                m4a);
         }
 
-        [TestMethod]
-        public void Vector3MatrixTransform()
+        [DataRow(0.0f, 0.0f, 1, 0)]
+        [DataRow(0.0f, 0.0f, 0, 0)]
+        [DataRow(0.0f, 0.0f, 0, 1)]
+        [DataRow(0.0f, 0.0f, 1, 1)]
+        [DataRow(1.0f, 1.0f, 1, 0)]
+        [DataRow(1.0f, 1.0f, 0, 0)]
+        [DataRow(1.0f, 1.0f, 0, 1)]
+        [DataRow(1.0f, 1.0f, 1, 1)]
+        [DataRow(1.23f, 2.34f, 1, 0)]
+        [DataRow(1.23f, 2.34f, 0, 0)]
+        [DataRow(1.23f, 2.34f, 0, 1)]
+        [DataRow(1.23f, 2.34f, 1, 1)]
+        [DataTestMethod]
+        public void Matrix3SetTranslation(float x, float y, float s, float o)
         {
-            Matrix3 m3b = new Matrix3();
-            m3b.SetRotateY(1.76f);
+            Matrix3 m3a = CreateMat3(s, o, o, o, s, o, o, o, s);
+            m3a.SetTranslation(x, y);
 
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3b = m3b * v3a;
-
-            AreComparable(new Vector3(844.077941895f, -48.2299995422f, -175.38130188f),
-                v3b);
+            AreEquivalent(CreateMat3(s, o, o, o, s, o, x, y, s), m3a);
         }
 
-        [TestMethod]
-        public void Vector3MatrixTransform2()
+        [DataRow(1, 0, 0,
+                 0, 1, 0,
+                 0, 0, 1,
+                2, 4, 6,
+                8, 10, 12,
+                14, 16, 18)]
+
+        [DataRow(2, 4, 6,
+                 8, 10, 12,
+                 14, 16, 18,
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1)]
+        [DataRow(2, 1, 1,
+                 1, 2, 1,
+                 1, 1, 2,
+                1, 1, -1,
+                1, -1, 1,
+                -1, 1, 1)]
+        [DataRow(2.11f, 3.22f, 4.33f,
+                 5.44f, 6.55f, 7.66f,
+                 8.77f, 9.88f, 10.99f,
+                11.100f, 12.110f, 13.120f,
+                14.130f, 15.140f, 16.150f,
+                17.160f, 18.170f, 19.180f)]
+        [DataTestMethod]
+        public void Matrix3Multiply(float a0, float a1, float a2, float a3, float a4, float a5, float a6, float a7, float a8,
+                                    float b0, float b1, float b2, float b3, float b4, float b5, float b6, float b7, float b8)
         {
-            Matrix3 m3c = new Matrix3();
-            m3c.SetRotateZ(9.62f);
-
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 862);
-            Vector3 v3c = m3c * v3a;
-
-            AreComparable(new Vector3(-22.5994224548f, 44.6950683594f, 862),
-                v3c);
-        }
-
-        [TestMethod]
-        public void Vector4MatrixTransform()
-        {
-            Matrix4 m4b = new Matrix4();
-            m4b.SetRotateY(-2.6f);
-
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4b = m4b * v4a;
-
-            AreComparable(new Vector4(-455.930236816f, -48.2299995422f, -731.678771973f, 0),
-                v4b);
-        }
-
-        [TestMethod]
-        public void Vector4MatrixTransform2()
-        {
-            Matrix4 m4c = new Matrix4();
-            m4c.SetRotateZ(0.72f);
-
-            Vector4 v4a = new Vector4(13.5f, -48.23f, 862, 0);
-            Vector4 v4b = m4c * v4a;
-
-            AreComparable(new Vector4(41.951499939f, -27.3578968048f, 862, 0),
-                v4b);
-        }
-
-        [TestMethod]
-        public void Matrix3Multiply()
-        {
-            Matrix3 m3a = new Matrix3(1, 2, 3, 4, 5, 4, 3, 2, 1);
-            Matrix3 m3b = new Matrix3(5, 4, 3, 2, 1, 2, 3, 4, 5);
+            Matrix3 m3a = CreateMat3(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+            Matrix3 m3b = CreateMat3(b0, b1, b2, b3, b4, b5, b6, b7, b8);
 
             Matrix3 m3c = m3a * m3b;
 
-            AreComparable(new Matrix3(30, 36, 34, 12, 13, 12, 34, 36, 30),
+            var mValidateA = new System.Numerics.Matrix4x4(a0, a1, a2, 0, a3, a4, a5, 0, a6, a7, a8, 0, 0, 0, 0, 1);
+            var mValidateB = new System.Numerics.Matrix4x4(b0, b1, b2, 0, b3, b4, b5, 0, b6, b7, b8, 0, 0, 0, 0, 1);
+
+            var mValidate = mValidateB * mValidateA;
+
+            AreEquivalent(CreateMat3(mValidate.M11, mValidate.M12, mValidate.M13, mValidate.M21, mValidate.M22, mValidate.M23, mValidate.M31, mValidate.M32, mValidate.M33),
                 m3c);
         }
 
-        // the two translations should add up when concatenated
-        [TestMethod]
-        public void Matrix3MultiplyTranslations()
+        [DataRow(1, 0, 0, 0,
+                 0, 1, 0, 0,
+                 0, 0, 1, 0,
+                 0, 0, 0, 1,
+                2, 4, 6, 8,
+                10, 12, 14, 16,
+                18, 20, 22, 24,
+                26, 28, 30, 32)]
+
+        [DataRow(2, 4, 6, 8,
+                10, 12, 14, 16,
+                18, 20, 22, 24,
+                26, 28, 30, 32,
+                1, 0, 0, 0,
+                 0, 1, 0, 0,
+                 0, 0, 1, 0,
+                 0, 0, 0, 1)]
+        [DataRow(2, 1, 1, 1,
+                 1, 2, 1, 1,
+                 1, 1, 2, 1,
+                 1, 1, 1, 2,
+                1, 1, 1, -1,
+                1, 1, -1, 1,
+                1, -1, 1, 1,
+                -1, 1, 1, 1)]
+        [DataRow(2.11f, 3.22f, 4.33f, 5.44f,
+                 6.55f, 7.66f, 8.77f, 9.88f,
+                 10.99f, 11.100f, 12.110f, 13.120f,
+                 14.130f, 15.140f, 16.150f, 17.160f,
+                18.170f, 19.180f, 20.190f, 21.200f,
+                22.210f, 23.220f, 24.230f, 25.240f,
+                26.250f, 27.260f, 28.270f, 29.280f,
+                30.290f, 31.300f, 32.310f, 33.320f)]
+        [DataTestMethod]
+        public void Matrix4Multiply(float a0, float a1, float a2, float a3, float a4, float a5, float a6, float a7, float a8, float a9, float a10, float a11, float a12, float a13, float a14, float a15,
+                                    float b0, float b1, float b2, float b3, float b4, float b5, float b6, float b7, float b8, float b9, float b10, float b11, float b12, float b13, float b14, float b15)
         {
-            Matrix3 m3a = new Matrix3(1);
-            m3a.SetTranslation(10, -10);
+            Matrix4 m3a = CreateMat4(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+            Matrix4 m3b = CreateMat4(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15);
 
-            Matrix3 m3b = new Matrix3(1);
-            m3b.SetTranslation(2, 2);
+            Matrix4 m3c = m3a * m3b;
 
-            Matrix3 m3c = new Matrix3(1);
-            m3c.SetTranslation(10 + 2, -10 + 2);
+            var mValidateA = new System.Numerics.Matrix4x4(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+            var mValidateB = new System.Numerics.Matrix4x4(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15);
 
-            Matrix3 m3d = m3a * m3b;
+            var mValidate = mValidateB * mValidateA;
 
-            AreComparable(m3d, m3c);
+            AreEquivalent(CreateMat4(mValidate.M11, mValidate.M12, mValidate.M13, mValidate.M14,
+                mValidate.M21, mValidate.M22, mValidate.M23, mValidate.M24,
+                mValidate.M31, mValidate.M32, mValidate.M33, mValidate.M34,
+                mValidate.M41, mValidate.M42, mValidate.M43, mValidate.M44),
+                m3c);
         }
 
-        // rotating by 1 radian, then 2 radians should be equivalent to rotating by 3 radians!
-        [TestMethod]
-        public void Matrix3MultiplyZRotations()
+        [DataRow(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)]
+        [DataRow(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1)]
+        [DataRow(1, 2, 3, 4, 5, 6, 7, 8, 9, 4, 5, 6)]
+        [DataTestMethod]
+        public void Vector3MatrixMultiply(float a, float b, float c, float d, float e, float f, float g, float h, float i,
+                                            float x, float y, float z)
         {
-            Matrix3 m3a = new Matrix3(1);
-            m3a.SetRotateZ(1);
+            Matrix3 m3a = CreateMat3(a, b, c, d, e, f, g, h, i);
+            Vector3 v3a = CreateVec3(x, y, z);
 
-            Matrix3 m3b = new Matrix3();
-            m3b.SetRotateZ(2);
+            Vector3 v3b = m3a * v3a;
 
-            Matrix3 m3c = new Matrix3();
-            m3c.SetRotateZ(3);
+            var mValidate = new System.Numerics.Matrix4x4(a, b, c, 0, d, e, f, 0, g, h, i, 0, 0, 0, 0, 1);
+            var vValidate = new System.Numerics.Vector4(x, y, z, 1);
+            var vResult = System.Numerics.Vector4.Transform(vValidate, mValidate);
 
-            // order doesn't matter here, for adding two translations
-            Matrix3 m3d = m3a * m3b;
-
-            AreComparable(m3d, m3c);
+            AreEquivalent(CreateVec3(vResult.X, vResult.Y, vResult.Z), v3b);
         }
 
-        // rotating by 90 degrees then moving 1m along local x is equivalent to
-        // moving 1m along y then rotating by 90 degrees
-        [TestMethod]
-        public void Matrix3MultiplyRotationTranslation()
+        [DataRow(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0)]
+        [DataRow(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1)]
+        [DataRow(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 4, 5, 6, 7)]
+        [DataTestMethod]
+        public void Vector4MatrixMultiply(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j, float k, float l, float m, float n, float o, float p,
+                                            float x, float y, float z, float w)
         {
-            Matrix3 rotateBy90 = new Matrix3(1);
-            rotateBy90.SetRotateZ((float)Math.PI / 2.0f);
+            var m4a = CreateMat4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
+            var v4a = CreateVec4(x, y, z, w);
 
-            Matrix3 translateX = new Matrix3();
-            translateX.SetTranslation(1, 0);
+            Vector4 v4b = m4a * v4a;
 
-            Matrix3 translateY = new Matrix3();
-            translateY.SetTranslation(0, 1);
+            var mValidate = new System.Numerics.Matrix4x4(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p);
+            var vValidate = new System.Numerics.Vector4(x, y, z, w);
+            var vResult = System.Numerics.Vector4.Transform(vValidate, mValidate);
 
-            Matrix3 m3c = new Matrix3();
-            m3c.SetRotateZ(3);
-
-            // operations happen in order for Matrix multiplication
-            // so m1 is rotate by 90 then move along local x
-            Matrix3 m1 = rotateBy90 * translateX;
-            // and m2 is move along local Y then rotate by 90
-            Matrix3 m2 = translateY * rotateBy90;
-
-            AreComparable(m1, m2);
+            AreEquivalent(CreateVec4(vResult.X, vResult.Y, vResult.Z, vResult.W), v4b);
         }
 
-        [TestMethod]
-        public void Matrix4Multiply()
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0xFF, (byte)0, (byte)0xFF, (byte)0)]
+        [DataRow((byte)0x12, (byte)0x34, (byte)0x56, (byte)0x78)]
+        [DataTestMethod]
+        public void ColourConstructor(byte r, byte g, byte b, byte a)
         {
-            var m4a = new Matrix4(1, 2, 3, 4, 4, 3, 2, 1, 4, 3, 2, 1, 1, 2, 3, 4);
-            var m4b = new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+            var c = new Colour(r, g, b, a);
 
-            Matrix4 m4c = m4a * m4b;
+            Colour validate = CreateColour(r, g, b, a);
 
-            AreComparable(new Matrix4(25, 25, 25, 25,
-                                      65, 65, 65, 65,
-                                      105, 105, 105, 105,
-                                      145, 145, 145, 145),
-                          m4c);
+            Assert.AreEqual<UInt32>(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector3MatrixTranslation()
+        [DataRow((byte)0x12, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0x12, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0xFF, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x12, (byte)0x34, (byte)0x56, (byte)0x78)]
+        [DataTestMethod]
+        public void ColourGetRed(byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix3 m3b = new Matrix3(1, 0, 0,
-                                      0, 1, 0,
-                                      55, 44, 1);
+            Colour c = CreateColour(r, g, b, a);
 
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 1);
-
-            Vector3 v3b = m3b * v3a;
-
-            AreComparable(new Vector3(68.5f, -4.23f, 1),
-                v3b);
+            Assert.AreEqual<byte>(r, c.red);
+            Colour validate = CreateColour(r, g, b, a);
+            Assert.AreEqual(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector3MatrixTranslation2()
+        [DataRow((byte)0, (byte)0x34, (byte)0, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0x34, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0xFF, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x12, (byte)0x34, (byte)0x56, (byte)0x78)]
+        [DataTestMethod]
+        public void ColourGetGreen(byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix3 m3c = new Matrix3();
-            m3c.SetRotateZ(2.2f);
-            m3c.m20 = 55; m3c.m21 = 44; m3c.m22 = 1;
+            Colour c = CreateColour(r, g, b, a);
 
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 1);
-
-            Vector3 v3c = m3c * v3a;
-
-            AreComparable(new Vector3(86.0490112305f, 83.2981109619f, 1),
-                v3c);
+            Assert.AreEqual<byte>(g, c.green);
+            Colour validate = CreateColour(r, g, b, a);
+            Assert.AreEqual(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector4MatrixTranslation()
+        [DataRow((byte)0, (byte)0, (byte)0x56, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0x56, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0xFF, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x12, (byte)0x34, (byte)0x56, (byte)0x78)]
+        [DataTestMethod]
+        public void ColourGetBlue(byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix4 m4b = new Matrix4(1, 0, 0, 0,
-                                      0, 1, 0, 0,
-                                      0, 0, 1, 0,
-                                      55, 44, 99, 1);
+            Colour c = CreateColour(r, g, b, a);
 
-            Vector4 v4a = new Vector4(13.5f, -48.23f, -54, 1);
-
-            Vector4 v4c = m4b * v4a;
-            AreComparable(new Vector4(68.5f, -4.23f, 45, 1),
-                v4c);
+            Assert.AreEqual<byte>(b, c.blue);
+            Colour validate = CreateColour(r, g, b, a);
+            Assert.AreEqual(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector4MatrixTranslation2()
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0x78)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0x78)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0xFF, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x12, (byte)0x34, (byte)0x56, (byte)0x78)]
+        [DataTestMethod]
+        public void ColourGetAlpha(byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix4 m4c = new Matrix4();
-            m4c.SetRotateZ(2.2f);
-            m4c.m30 = 55; m4c.m31 = 44; m4c.m32 = 99; m4c.m33 = 1;
+            Colour c = CreateColour(r, g, b, a);
 
-            Vector4 v4a = new Vector4(13.5f, -48.23f, -54, 1);
-
-            Vector4 v4c = m4c * v4a;
-            AreComparable(new Vector4(86.0490112305f, 83.2981109619f, 45, 1),
-                v4c);
+            Assert.AreEqual<byte>(a, c.alpha);
+            Colour validate = CreateColour(r, g, b, a);
+            Assert.AreEqual(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector3MatrixTranslation3()
+        [DataRow((byte)0x12, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0x12, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x12, (byte)0xFF, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0x12, (byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataTestMethod]
+        public void ColourSetRed(byte v, byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix3 m3b = new Matrix3(1, 0, 0,
-                                      0, 1, 0,
-                                      55, 44, 1);
+            Colour c = CreateColour(r, g, b, a);
+            c.red = v;
 
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 0);
+            Colour validate = CreateColour(v, g, b, a);
 
-            Vector3 v3b = m3b * v3a;
-
-            AreComparable(new Vector3(13.5f, -48.23f, 0),
-                v3b);
+            Assert.AreEqual<UInt32>(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector3MatrixTranslation4()
+        [DataRow((byte)0x34, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0x34, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x34, (byte)0, (byte)0xFF, (byte)0, (byte)0)]
+        [DataRow((byte)0x34, (byte)0xFF, (byte)0, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0xFF, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0, (byte)0xFF, (byte)0xFF)]
+        [DataTestMethod]
+        public void ColourSetGreen(byte v, byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix3 m3c = new Matrix3();
-            m3c.SetRotateZ(2.2f);
-            m3c.m20 = 55; m3c.m21 = 44; m3c.m22 = 1;
+            Colour c = CreateColour(r, g, b, a);
+            c.green = v;
 
-            Vector3 v3a = new Vector3(13.5f, -48.23f, 0);
+            Colour validate = CreateColour(r, v, b, a);
 
-            Vector3 v3c = m3c * v3a;
-
-            AreComparable(new Vector3(31.0490131378f, 39.2981109619f, 0),
-                v3c);
+            Assert.AreEqual<UInt32>(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector4MatrixTranslation3()
+        [DataRow((byte)0x56, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0x56, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x56, (byte)0, (byte)0, (byte)0xFF, (byte)0)]
+        [DataRow((byte)0x56, (byte)0xFF, (byte)0xFF, (byte)0, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0xFF, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0, (byte)0xFF)]
+        [DataTestMethod]
+        public void ColourSetBlue(byte v, byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix4 m4b = new Matrix4(1, 0, 0, 0,
-                                      0, 1, 0, 0,
-                                      0, 0, 1, 0,
-                                      55, 44, 99, 1);
+            Colour c = CreateColour(r, g, b, a);
+            c.blue = v;
 
-            Vector4 v4a = new Vector4(13.5f, -48.23f, -54, 0);
+            Colour validate = CreateColour(r, g, v, a);
 
-            Vector4 v4c = m4b * v4a;
-            AreComparable(new Vector4(13.5f, -48.23f, -54, 0),
-                v4c);
+            Assert.AreEqual<UInt32>(validate.colour, c.colour);
         }
 
-        [TestMethod]
-        public void Vector4MatrixTranslation4()
+        [DataRow((byte)0x78, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0x78, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0x78, (byte)0, (byte)0, (byte)0, (byte)0xFF)]
+        [DataRow((byte)0x78, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0, (byte)0)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0, (byte)0, (byte)0, (byte)0xFF)]
+        [DataRow((byte)0, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0)]
+        [DataTestMethod]
+        public void ColourSetAlpha(byte v, byte r, byte g, byte b, byte a)
         {
-            // homogeneous point translation
-            Matrix4 m4c = new Matrix4();
-            m4c.SetRotateZ(2.2f);
-            m4c.m30 = 55; m4c.m31 = 44; m4c.m32 = 99; m4c.m33 = 1;
+            Colour c = CreateColour(r, g, b, a);
+            c.alpha = v;
 
-            Vector4 v4a = new Vector4(13.5f, -48.23f, -54, 0);
+            Colour validate = CreateColour(r, g, b, v);
 
-            Vector4 v4c = m4c * v4a;
-            AreComparable(new Vector4(31.0490131378f, 39.2981109619f, -54, 0),
-                v4c);
+            Assert.AreEqual<UInt32>(validate.colour, c.colour);
         }
-
-        //[TestMethod]
-        //public void ColourConstructor()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour(0x12, 0x34, 0x56, 0x78);
-
-        //    Assert.AreEqual<UInt32>(0x12345678, c.colour);
-        //}
-
-        //[TestMethod]
-        //public void ColourGetRed()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour(0x12, 0x34, 0x56, 0x78);
-
-        //    Assert.AreEqual<byte>(0x12, c.red);
-        //}
-
-        //[TestMethod]
-        //public void ColourGetGreen()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour(0x12, 0x34, 0x56, 0x78);
-
-        //    Assert.AreEqual<byte>(0x34, c.green);
-        //}
-
-
-        //[TestMethod]
-        //public void ColourGetBlue()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour(0x12, 0x34, 0x56, 0x78);
-
-        //    Assert.AreEqual<byte>(0x56, c.blue);
-        //}
-
-        //[TestMethod]
-        //public void ColourGetAlpha()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour(0x12, 0x34, 0x56, 0x78);
-
-        //    Assert.AreEqual<byte>(0x78, c.alpha);
-        //}
-
-        //[TestMethod]
-        //public void ColourSetRed()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour();
-        //    c.red = 0x12;
-
-        //    Assert.AreEqual<UInt32>(0x12000000, c.colour);
-        //}
-
-        //[TestMethod]
-        //public void ColourSetGreen()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour();
-        //    c.green = 0x34;
-
-        //    Assert.AreEqual<UInt32>(0x00340000, c.colour);
-        //}
-
-        //[TestMethod]
-        //public void ColourSetBlue()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour();
-        //    c.blue = 0x56;
-
-        //    Assert.AreEqual<UInt32>(0x00005600, c.colour);
-        //}
-
-        //[TestMethod]
-        //public void ColourSetAlpha()
-        //{
-        //    homogeneous point translation
-        //   Colour c = new Colour();
-        //    c.alpha = 0x78;
-
-        //    Assert.AreEqual<UInt32>(0x00000078, c.colour);
-        //}
     }
 }
