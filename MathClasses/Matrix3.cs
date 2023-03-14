@@ -17,6 +17,20 @@ namespace MathClasses
         public float m20, m21, m22; //z axis
 
         //create a constructor taking individual elements and asigning them
+
+        //public Matrix3(float _m00, float _m10, float _m20, float _m01, float _m11, float _m21, float _m02, float _m12, float _m22)
+        //{
+        //    m00 = _m00;
+        //    m01 = _m01;
+        //    m02 = _m02;
+        //    m10 = _m10;
+        //    m11 = _m11;
+        //    m12 = _m12;
+        //    m20 = _m20;
+        //    m21 = _m21;
+        //    m22 = _m22;
+        //}
+
         public Matrix3(float _m00, float _m01, float _m02, float _m10, float _m11, float _m12, float _m20, float _m21, float _m22)
         {
             m00 = _m00;
@@ -29,6 +43,8 @@ namespace MathClasses
             m21 = _m21;
             m22 = _m22;
         }
+
+
         //create a constructor taking in 3 Vectors
         public Matrix3(Vector3 X, Vector3 Y, Vector3 Z)
         {
@@ -174,7 +190,7 @@ namespace MathClasses
         //create a function to set stranslation information in Matrix3
         public void SetTranslation(float x, float y)
         {
-            m20 = x; m21 = y; m22 = 1;            
+            m20 = x; m21 = y; //m22 = 1;
         }
 
         //create a function to translate a Matrix3
