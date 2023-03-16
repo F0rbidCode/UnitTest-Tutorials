@@ -73,11 +73,11 @@ namespace UnitTestProject
         /// </summary>
         /// <remarks>Not suitable for most use-cases.</remarks>
         /// <param name="expected"></param>
-        /// <param name="actual"></param>
         static void AreEqual(Vector3 expected, Vector3 actual)
         {
             Assert.AreEqual(expected.x, actual.x);
             Assert.AreEqual(expected.y, actual.y);
+        /// <param name="actual"></param>
             Assert.AreEqual(expected.z, actual.z);
         }
         static void AreEqual(Vector4 expected, Vector4 actual)
@@ -968,6 +968,26 @@ namespace UnitTestProject
             c.alpha = v;
 
             Colour validate = CreateColour(r, g, b, v);
+
+            Assert.AreEqual<UInt32>(validate.colour, c.colour);
+        }
+
+        [DataRow((byte)94,(byte)94, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)2,(byte)2, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)100,(byte)100, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)255,(byte)255, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)122,(byte)122, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)16,(byte)16, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)21,(byte)21, (byte) 0, (byte)0, (byte)0)]
+        [DataRow((byte)55,(byte)55, (byte) 0, (byte)0, (byte)0)]
+        [DataTestMethod]
+        public void NumberConversionTask(byte v, byte r,  byte g, byte b, byte a)
+        {
+            Colour c = CreateColour(0, g, b, a);
+            c.green = v;
+
+            Colour validate = CreateColour(r, g, b, a);
+            validate.ShiftRtoG();
 
             Assert.AreEqual<UInt32>(validate.colour, c.colour);
         }

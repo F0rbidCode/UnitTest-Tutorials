@@ -38,7 +38,10 @@ namespace MathClasses
            
         }
 
-
+        public void ShiftRtoG()
+        {
+            colour = colour >> 8;
+        }
 
     }
 }
