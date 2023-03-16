@@ -14,7 +14,7 @@ namespace MathClasses
     {
         public float m00, m01, m02; //x axis
         public float m10, m11, m12; //y axis
-        public float m20, m21, m22; //z axis
+        public float m20, m21, m22; //w axis
 
         //create a constructor taking individual elements and asigning them
 
@@ -190,7 +190,7 @@ namespace MathClasses
         //create a function to set stranslation information in Matrix3
         public void SetTranslation(float x, float y)
         {
-            m20 = x; m21 = y; //m22 = 1;
+            m20 = x; m21 = y; //m22 = 1; //had to remove equaling the m22 position to 1 as it failed the unit tests with it
         }
 
         //create a function to translate a Matrix3
